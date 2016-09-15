@@ -1,0 +1,53 @@
+{% if pagination['firstPage'] is defined or pagination['lastPage'] is defined %}
+    <nav>
+        <ul class="pagination">
+            {% if pagination['prevPage'] is defined %}
+                <li>
+                    <a class="prev" href="{{ pagination['url'] ~ '?page=' ~ pagination['prevPage'] }}"
+                       aria-label="Previous">
+                        <span aria-hidden="true"></span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if pagination['firstPage'] is defined %}
+                <li>
+                    <a href="{{ pagination['url'] ~ '?page=' ~ pagination['firstPage'] }}">{{ pagination['firstPage'] }}</a>
+                </li>
+            {% endif %}
+            {% if pagination['morePreviousPages'] is defined %}
+                <li>...</li>
+            {% endif %}
+            {% if pagination['previousPages'] is defined %}
+                {% for previousPage in pagination['previousPages'] %}
+                    <li>
+                        <a href="{{ pagination['url'] ~ '?page=' ~ previousPage }}">{{ previousPage }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+            <li>{{ pagination['currentPage'] }}</li>
+            {% if pagination['nextPages'] is defined %}
+                {% for nextPage in pagination['nextPages'] %}
+                    <li>
+                        <a href="{{ pagination['url'] ~ '?page=' ~ nextPage }}">{{ nextPage }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+            {% if pagination['moreNextPages'] is defined %}
+                <li>...</li>
+            {% endif %}
+            {% if pagination['lastPage'] is defined %}
+                <li>
+                    <a href="{{ pagination['url'] ~ '?page=' ~ pagination['lastPage'] }}">{{ pagination['lastPage'] }}</a>
+                </li>
+            {% endif %}
+            {% if pagination['nextPage'] is defined %}
+                <li>
+                    <a class="next" href="{{ pagination['url'] ~ '?page=' ~ pagination['nextPage'] }}"
+                       aria-label="Next">
+                        <span aria-hidden="true"></span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
