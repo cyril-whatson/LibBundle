@@ -15,330 +15,333 @@ class BaseRepository extends EntityRepository implements RepositoryInterface
 {
 
     public $qb;
-    
-	/**
-	 * @return string
-	 */
-	public function getEntityNameQueryBuilder()
-	{
 
-		return '';
-	}
+    /**
+     * @return string
+     */
+    public function getEntityNameQueryBuilder()
+    {
 
-	/**
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	public function getBaseQuery()
-	{
+        return '';
+    }
 
-		return $this
-			->createQueryBuilder($this->getEntityNameQueryBuilder());
-	}
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getBaseQuery()
+    {
 
-	/**
-	 * @param $condition
-	 *
-	 * @return bool
-	 */
-	public function handleCondition($condition)
-	{
+        return $this
+            ->createQueryBuilder($this->getEntityNameQueryBuilder());
+    }
 
-		switch ($condition) {
+    /**
+     * @param $condition
+     *
+     * @return bool
+     */
+    public function handleCondition($condition)
+    {
 
-			default:
-				return false;
-				break;
+        switch ($condition) {
 
-		}
+            default:
+                return false;
+                break;
 
-		return true;
-	}
+        }
 
-	/**
-	 * @param $order
-	 *
-	 * @return bool
-	 */
-	public function handleOrder($order)
-	{
+        return true;
+    }
 
-		switch ($order) {
+    /**
+     * @param $order
+     *
+     * @return bool
+     */
+    public function handleOrder($order)
+    {
 
-			default:
-				return false;
-				break;
+        switch ($order) {
 
-		}
+            default:
+                return false;
+                break;
 
-		return true;
-	}
+        }
 
-	/**
-	 * @param $group
-	 *
-	 * @return bool
-	 */
-	public function handleGroup($group)
-	{
+        return true;
+    }
 
-		switch ($group) {
+    /**
+     * @param $group
+     *
+     * @return bool
+     */
+    public function handleGroup($group)
+    {
 
-			default:
-				return false;
-				break;
+        switch ($group) {
 
-		}
+            default:
+                return false;
+                break;
 
-		return true;
-	}
+        }
 
-	/**
-	 * @param string $type
-	 * @param array  $options
-	 *
-	 * @return array|bool|\Doctrine\ORM\QueryBuilder|Paginator|mixed
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
-	public function get($type = 'all', $options = array())
-	{
+        return true;
+    }
 
-		$this->qb = $this->getBaseQuery();
+    /**
+     * @param string $type
+     * @param array  $options
+     *
+     * @return array|bool|\Doctrine\ORM\QueryBuilder|Paginator|mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function get($type = 'all', $options = array())
+    {
 
-		foreach ($options as $key => $option) {
+        $this->qb = $this->getBaseQuery();
 
-			switch ($key) {
+        foreach ($options as $key => $option) {
 
-				case 'limit':
-					$this->qb->setMaxResults($option);
-					break;
+            switch ($key) {
 
-				case 'order':
+                case 'limit':
+                    $this->qb->setMaxResults($option);
+                    break;
 
-					foreach ($option as $order => $value) {
+                case 'order':
 
-						// Autre comportement défini ?
-						if ($this->handleOrder($order)) {
-							continue;
-						}
+                    foreach ($option as $order => $value) {
 
-						$this->qb->addOrderBy($order, $value);
-					}
+                        // Autre comportement défini ?
+                        if ($this->handleOrder($order)) {
+                            continue;
+                        }
 
-					break;
+                        $this->qb->addOrderBy($order, $value);
+                    }
 
-				case 'conditions':
+                    break;
 
-					foreach ($option as $condition => $value) {
+                case 'conditions':
 
-						// Autre comportement défini ?
-						if ($this->handleCondition($condition)) {
-							continue;
-						}
+                    foreach ($option as $condition => $value) {
 
-						// Exemple de $condition "entity.field !="
-						if (preg_match('#.* !=#', $condition)) {
+                        // Autre comportement défini ?
+                        if ($this->handleCondition($condition)) {
+                            continue;
+                        }
 
-							$condition = preg_replace('#(.*) !=#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                        // Exemple de $condition "entity.field !="
+                        if (preg_match('#.* !=#', $condition)) {
 
-							if (is_array($value)) {
+                            $condition = preg_replace('#(.*) !=#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-								$conditionWhere = $condition . ' NOT IN (:' . $conditionParameter . ')';
-							} else {
+                            if (is_array($value)) {
 
-								$conditionWhere = $condition . ' != :' . $conditionParameter;
-							}
+                                $conditionWhere = $condition.' NOT IN (:'.$conditionParameter.')';
+                            } else {
 
-							// Exemple de $condition "entity.field LIKE"
-						} elseif (preg_match('#.* LIKE#', $condition)) {
+                                $conditionWhere = $condition.' != :'.$conditionParameter;
+                            }
 
-							$condition = preg_replace('#(.*) LIKE#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field LIKE"
+                        } elseif (preg_match('#.* LIKE#', $condition)) {
 
-							$conditionWhere = $condition . ' LIKE :' . $conditionParameter;
+                            $condition = preg_replace('#(.*) LIKE#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							// Exemple de $condition "entity.field >="
-						} elseif (preg_match('#.* >=#', $condition)) {
+                            $conditionWhere = $condition.' LIKE :'.$conditionParameter;
 
-							$condition = preg_replace('#(.*) >=#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field >="
+                        } elseif (preg_match('#.* >=#', $condition)) {
 
-							$conditionWhere = $condition . ' >= :' . $conditionParameter;
+                            $condition = preg_replace('#(.*) >=#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							// Exemple de $condition "entity.field >"
-						} elseif (preg_match('#.* >#', $condition)) {
+                            $conditionWhere = $condition.' >= :'.$conditionParameter;
 
-							$condition = preg_replace('#(.*) >#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field >"
+                        } elseif (preg_match('#.* >#', $condition)) {
 
-							$conditionWhere = $condition . ' > :' . $conditionParameter;
+                            $condition = preg_replace('#(.*) >#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							// Exemple de $condition "entity.field <="
-						} elseif (preg_match('#.* <=#', $condition)) {
+                            $conditionWhere = $condition.' > :'.$conditionParameter;
 
-							$condition = preg_replace('#(.*) <=#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field <="
+                        } elseif (preg_match('#.* <=#', $condition)) {
 
-							$conditionWhere = $condition . ' <= :' . $conditionParameter;
+                            $condition = preg_replace('#(.*) <=#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							// Exemple de $condition "entity.field <"
-						} elseif (preg_match('#.* <#', $condition)) {
+                            $conditionWhere = $condition.' <= :'.$conditionParameter;
 
-							$condition = preg_replace('#(.*) <#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field <"
+                        } elseif (preg_match('#.* <#', $condition)) {
 
-							$conditionWhere = $condition . ' < :' . $conditionParameter;
+                            $condition = preg_replace('#(.*) <#', '$1', $condition);
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							// Exemple de $condition "entity.field NULL"
-						} elseif (preg_match('#.* NULL#', $condition)) {
+                            $conditionWhere = $condition.' < :'.$conditionParameter;
 
-							$condition = preg_replace('#(.*) NULL#', '$1', $condition);
+                            // Exemple de $condition "entity.field NULL"
+                        } elseif (preg_match('#.* NULL#', $condition)) {
 
-							$conditionWhere = $condition . ' IS NULL';
+                            $condition = preg_replace('#(.*) NULL#', '$1', $condition);
+                            $conditionParameter = null;
 
-							// Exemple de $condition "entity.field"
-						} else {
+                            $conditionWhere = $condition.' IS NULL';
 
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+                            // Exemple de $condition "entity.field"
+                        } else {
 
-							if (is_array($value)) {
+                            $conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-								$conditionWhere = $condition . ' IN (:' . $conditionParameter . ')';
-							} else {
+                            if (is_array($value)) {
 
-								$conditionWhere = $condition . ' = :' . $conditionParameter;
-							}
-						}
+                                $conditionWhere = $condition.' IN (:'.$conditionParameter.')';
+                            } else {
 
-						$this->qb->setParameter($conditionParameter, $value);
-						$this->qb->andWhere($conditionWhere);
+                                $conditionWhere = $condition.' = :'.$conditionParameter;
+                            }
+                        }
 
-					}
+                        if ($conditionParameter) {
 
-					break;
+                            $this->qb->setParameter($conditionParameter, $value);
+                        }
+                        $this->qb->andWhere($conditionWhere);
+                    }
 
-				case 'group':
+                    break;
 
-					foreach ($option as $group) {
+                case 'group':
 
-						// Autre comportement défini ?
-						if ($this->handleGroup($group)) {
-							continue;
-						}
+                    foreach ($option as $group) {
 
-						$this->qb->addGroupBy($group);
-					}
+                        // Autre comportement défini ?
+                        if ($this->handleGroup($group)) {
+                            continue;
+                        }
 
-					break;
-			}
-		}
+                        $this->qb->addGroupBy($group);
+                    }
 
-		switch ($type) {
+                    break;
+            }
+        }
 
-			case 'query':
+        switch ($type) {
 
-				return $this->qb;
+            case 'query':
 
-				break;
+                return $this->qb;
 
-			case 'all':
+                break;
 
-				return $this->qb->getQuery()->getResult();
+            case 'all':
 
-				break;
+                return $this->qb->getQuery()->getResult();
 
-			case 'one':
+                break;
 
-				return $this->qb->getQuery()->getOneOrNullResult();
+            case 'one':
 
-				break;
+                return $this->qb->getQuery()->getOneOrNullResult();
 
-			case 'paginate':
+                break;
 
-				$this->qb->getQuery();
+            case 'paginate':
 
-				if (!empty($options['paginate']['page'])) {
+                $this->qb->getQuery();
 
-					$this->qb->setFirstResult(($options['paginate']['page'] - 1) * $options['paginate']['limit']);
-				}
+                if (!empty($options['paginate']['page'])) {
 
-				if (!empty($options['paginate']['limit'])) {
+                    $this->qb->setFirstResult(($options['paginate']['page'] - 1) * $options['paginate']['limit']);
+                }
 
-					$this->qb->setMaxResults($options['paginate']['limit']);
-				}
+                if (!empty($options['paginate']['limit'])) {
 
-				return new Paginator($this->qb, true);
+                    $this->qb->setMaxResults($options['paginate']['limit']);
+                }
 
-				break;
+                return new Paginator($this->qb, true);
 
-			case 'pagination':
+                break;
 
-				$pagination = array();
+            case 'pagination':
 
-				if (!isset($options['paginate']['page']) || !isset($options['paginate']['limit'])) {
-					return array();
-				}
+                $pagination = array();
 
-				$entities = $this->qb->getQuery()->getResult();
+                if (!isset($options['paginate']['page']) || !isset($options['paginate']['limit'])) {
+                    return array();
+                }
 
-				$currentPage = $options['paginate']['page'];
-				$nbEntities = count($entities);
-				$nbPages = (integer)ceil($nbEntities / $options['paginate']['limit']);
-				if ($nbPages == 0) {
-					$nbPages = 1;
-				}
+                $entities = $this->qb->getQuery()->getResult();
 
-				$prevNextMaxPages = round($nbPages / 20);
-				if ($prevNextMaxPages < 2) {
-					$prevNextMaxPages = 2;
-				}
-				if ($prevNextMaxPages > 5) {
-					$prevNextMaxPages = 5;
-				}
+                $currentPage = $options['paginate']['page'];
+                $nbEntities = count($entities);
+                $nbPages = (integer)ceil($nbEntities / $options['paginate']['limit']);
+                if ($nbPages == 0) {
+                    $nbPages = 1;
+                }
 
-				if ($currentPage != 1) {
-					$pagination['firstPage'] = 1;
-					$pagination['prevPage'] = $currentPage - 1;
-				}
+                $prevNextMaxPages = round($nbPages / 20);
+                if ($prevNextMaxPages < 2) {
+                    $prevNextMaxPages = 2;
+                }
+                if ($prevNextMaxPages > 5) {
+                    $prevNextMaxPages = 5;
+                }
 
-				for ($i = 1; $i <= $prevNextMaxPages; $i++) {
-					$prevPage = $currentPage - $i;
-					if ($prevPage > 1 and $prevPage != $nbPages and $prevPage <= $nbPages) {
-						$pagination['previousPages'][] = $prevPage;
-					}
-				}
-				$i++;
-				$prevPage = $currentPage - $i;
-				if ($prevPage > 1 and $prevPage != $nbPages and $prevPage < $nbPages) {
-					$pagination['morePreviousPages'] = true;
-				}
+                if ($currentPage != 1) {
+                    $pagination['firstPage'] = 1;
+                    $pagination['prevPage'] = $currentPage - 1;
+                }
 
-				$pagination['currentPage'] = $currentPage;
+                for ($i = 1; $i <= $prevNextMaxPages; $i++) {
+                    $prevPage = $currentPage - $i;
+                    if ($prevPage > 1 and $prevPage != $nbPages and $prevPage <= $nbPages) {
+                        $pagination['previousPages'][] = $prevPage;
+                    }
+                }
+                $i++;
+                $prevPage = $currentPage - $i;
+                if ($prevPage > 1 and $prevPage != $nbPages and $prevPage < $nbPages) {
+                    $pagination['morePreviousPages'] = true;
+                }
 
-				for ($i = 1; $i <= $prevNextMaxPages; $i++) {
-					$nextPage = $currentPage + $i;
-					if ($nextPage > 1 and $nextPage != $nbPages and $nextPage < $nbPages) {
-						$pagination['nextPages'][] = $nextPage;
-					}
-				}
-				$i++;
-				$nextPage = $currentPage + $i;
-				if ($nextPage > 1 and $nextPage != $nbPages and $nextPage < $nbPages) {
-					$pagination['moreNextPages'] = true;
-				}
+                $pagination['currentPage'] = $currentPage;
 
-				if ($currentPage != $nbPages) {
-					$pagination['lastPage'] = $nbPages;
-					$pagination['nextPage'] = $currentPage + 1;
-				}
+                for ($i = 1; $i <= $prevNextMaxPages; $i++) {
+                    $nextPage = $currentPage + $i;
+                    if ($nextPage > 1 and $nextPage != $nbPages and $nextPage < $nbPages) {
+                        $pagination['nextPages'][] = $nextPage;
+                    }
+                }
+                $i++;
+                $nextPage = $currentPage + $i;
+                if ($nextPage > 1 and $nextPage != $nbPages and $nextPage < $nbPages) {
+                    $pagination['moreNextPages'] = true;
+                }
 
-				return $pagination;
+                if ($currentPage != $nbPages) {
+                    $pagination['lastPage'] = $nbPages;
+                    $pagination['nextPage'] = $currentPage + 1;
+                }
 
-				break;
+                return $pagination;
 
-		}
+                break;
 
-		return false;
-	}
+        }
+
+        return false;
+    }
 
 }
