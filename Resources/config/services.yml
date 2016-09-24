@@ -1,1 +1,3 @@
 services:
+    entity.parser:
+        class: WH\LibBundle\Services\EntityParser
