@@ -30,10 +30,11 @@ interface RepositoryInterface
 
 	/**
 	 * @param $condition
+	 * @param $value
 	 *
 	 * @return bool
 	 */
-	public function handleCondition($condition);
+	public function handleCondition($condition, $value);
 
 	/**
 	 * @param $order
