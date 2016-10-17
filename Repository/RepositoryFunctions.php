@@ -2,17 +2,19 @@
 
 namespace WH\LibBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Gedmo\Exception\InvalidArgumentException;
+use Gedmo\Tool\Wrapper\EntityWrapper;
+use WH\LibBundle\Utils\Inflector;
 
 /**
- * Class BaseRepository
+ * Class RepositoryFunctions
  *
  * @package WH\LibBundle\Repository
  */
-class BaseRepository extends EntityRepository implements RepositoryInterface
+trait RepositoryFunctions
 {
 
-<<<<<<< HEAD
     public $qb;
 
     /**
@@ -34,13 +36,12 @@ class BaseRepository extends EntityRepository implements RepositoryInterface
             ->createQueryBuilder($this->getEntityNameQueryBuilder());
     }
 
-	/**
-	 * @param $condition
-	 * @param $value
-	 *
-	 * @return bool
-	 */
-    public function handleCondition($condition, $value)
+    /**
+     * @param $condition
+     *
+     * @return bool
+     */
+    public function handleCondition($condition)
     {
 
         switch ($condition) {
@@ -131,7 +132,7 @@ class BaseRepository extends EntityRepository implements RepositoryInterface
                     foreach ($option as $condition => $value) {
 
                         // Autre comportement défini ?
-                        if ($this->handleCondition($condition, $value)) {
+                        if ($this->handleCondition($condition)) {
                             continue;
                         }
 
@@ -344,7 +345,4 @@ class BaseRepository extends EntityRepository implements RepositoryInterface
         return false;
     }
 
-=======
-	use RepositoryFunctions;
->>>>>>> a2d7bef
 }
