@@ -36,12 +36,13 @@ trait RepositoryFunctions
             ->createQueryBuilder($this->getEntityNameQueryBuilder());
     }
 
-    /**
-     * @param $condition
-     *
-     * @return bool
-     */
-    public function handleCondition($condition)
+	/**
+	 * @param $condition
+	 * @param $value
+	 *
+	 * @return bool
+	 */
+    public function handleCondition($condition, $value)
     {
 
         switch ($condition) {
@@ -132,7 +133,7 @@ trait RepositoryFunctions
                     foreach ($option as $condition => $value) {
 
                         // Autre comportement défini ?
-                        if ($this->handleCondition($condition)) {
+                        if ($this->handleCondition($condition, $value)) {
                             continue;
                         }
 
