@@ -276,6 +276,21 @@ trait RepositoryFunctions
 
                 break;
 
+	        case 'select':
+
+		        $results = $qb->getQuery()->getResult();
+
+		        $options = array();
+		        foreach ($results as $result) {
+			        $options[$result->getId()] = $result->getName();
+		        }
+
+		        $options = array_flip($options);
+
+		        return $options;
+
+		        break;
+
             case 'pagination':
 
                 $pagination = array();
