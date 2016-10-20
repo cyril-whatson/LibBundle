@@ -278,7 +278,7 @@ trait RepositoryFunctions
 
 	        case 'select':
 
-		        $results = $qb->getQuery()->getResult();
+		        $results = $this->qb->getQuery()->getResult();
 
 		        $options = array();
 		        foreach ($results as $result) {
