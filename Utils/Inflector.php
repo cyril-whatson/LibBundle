@@ -40,7 +40,7 @@ class Inflector extends \Doctrine\Common\Inflector\Inflector
 			return $conditionParameter[0];
 		}
 
-		$conditionParameter[1] = strtoupper(substr($conditionParameter[1], 0, 1)) . substr($conditionParameter[1], 1);
+		$conditionParameter[1] = ucfirst($conditionParameter[1]);
 		$conditionParameter = implode('', $conditionParameter);
 
 		return $conditionParameter;
