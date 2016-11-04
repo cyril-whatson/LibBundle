@@ -1,3 +1,5 @@
 services:
-    entity.parser:
+    lib.entity_parser:
         class: WH\LibBundle\Services\EntityParser
+    lib.useful_functions:
+        class: WH\LibBundle\Services\UsefulFunctions
