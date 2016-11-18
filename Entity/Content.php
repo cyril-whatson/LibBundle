@@ -17,28 +17,28 @@ trait Content
 	 *
 	 * @ORM\Column(name="title", type="string", length=255, nullable=true)
 	 */
-	private $title;
+	protected $title;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="name", type="string", length=255)
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="resume", type="text", nullable=true)
 	 */
-	private $resume;
+	protected $resume;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="body", type="text", nullable=true)
 	 */
-	private $body;
+	protected $body;
 
 	/**
 	 * @var string
@@ -46,7 +46,7 @@ trait Content
 	 * @Gedmo\Slug(fields={"name"})
 	 * @ORM\Column(name="slug", type="string", length=255, unique=true)
 	 */
-	private $slug;
+	protected $slug;
 
 	/**
 	 * Set name

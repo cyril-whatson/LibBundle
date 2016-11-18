@@ -12,6 +12,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait Status
 {
 
+	static $STATUS_DRAFT = 0;
+	static $STATUS_PUBLISHED = 1;
+
 	/**
 	 * Status constructor.
 	 */
@@ -43,7 +46,7 @@ trait Status
 	 *
 	 * @ORM\Column(name="status", type="integer")
 	 */
-	private $status;
+	protected $status;
 
 	/**
 	 * Set status

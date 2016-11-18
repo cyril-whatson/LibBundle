@@ -16,19 +16,19 @@ trait Tree
 	 * @Gedmo\TreeLeft
 	 * @ORM\Column(type="integer")
 	 */
-	private $lft;
+	protected $lft;
 
 	/**
 	 * @Gedmo\TreeLevel
 	 * @ORM\Column(type="integer")
 	 */
-	private $lvl;
+	protected $lvl;
 
 	/**
 	 * @Gedmo\TreeRight
 	 * @ORM\Column(type="integer")
 	 */
-	private $rgt;
+	protected $rgt;
 
 	/**
 	 * Set lft
