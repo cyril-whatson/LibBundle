@@ -28,8 +28,8 @@ trait Status
 	 * @var array
 	 */
 	static protected $statuses = array(
-		0 => 'Brouillon',
-		1 => 'Publié',
+		0 => 'Draft',
+		1 => 'Published',
 	);
 
 	/**
