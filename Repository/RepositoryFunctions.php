@@ -151,35 +151,45 @@ trait RepositoryFunctions
 						} elseif (preg_match('#.* LIKE#', $condition)) {
 
 							$condition = preg_replace('#(.*) LIKE#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+							$conditionParameter = Inflector::transformConditionInConditionParameter(
+								$condition . 'LIKE'
+							);
 
 							$conditionWhere = $condition . ' LIKE :' . $conditionParameter;
 							// Exemple de $condition "entity.field >="
 						} elseif (preg_match('#.* >=#', $condition)) {
 
 							$condition = preg_replace('#(.*) >=#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+							$conditionParameter = Inflector::transformConditionInConditionParameter(
+								$condition . 'SuperiorOrEqual'
+							);
 
 							$conditionWhere = $condition . ' >= :' . $conditionParameter;
 							// Exemple de $condition "entity.field >"
 						} elseif (preg_match('#.* >#', $condition)) {
 
 							$condition = preg_replace('#(.*) >#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+							$conditionParameter = Inflector::transformConditionInConditionParameter(
+								$condition . 'Superior'
+							);
 
 							$conditionWhere = $condition . ' > :' . $conditionParameter;
 							// Exemple de $condition "entity.field <="
 						} elseif (preg_match('#.* <=#', $condition)) {
 
 							$condition = preg_replace('#(.*) <=#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+							$conditionParameter = Inflector::transformConditionInConditionParameter(
+								$condition . 'InferiorOrEqual'
+							);
 
 							$conditionWhere = $condition . ' <= :' . $conditionParameter;
 							// Exemple de $condition "entity.field <"
 						} elseif (preg_match('#.* <#', $condition)) {
 
 							$condition = preg_replace('#(.*) <#', '$1', $condition);
-							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
+							$conditionParameter = Inflector::transformConditionInConditionParameter(
+								$condition . 'Inferior'
+							);
 
 							$conditionWhere = $condition . ' < :' . $conditionParameter;
 							// Exemple de $condition "entity.field NULL"
@@ -232,6 +242,19 @@ trait RepositoryFunctions
 			case 'query':
 
 				return $this->qb;
+
+				break;
+
+			case 'first':
+
+				$this->qb->setMaxResults(1);
+				$results = $this->qb->getQuery()->getResult();
+
+				if ($results) {
+					return $results[0];
+				}
+
+				return null;
 
 				break;
 
