@@ -140,12 +140,17 @@ trait RepositoryFunctions
 							$condition = preg_replace('#(.*) !=#', '$1', $condition);
 							$conditionParameter = Inflector::transformConditionInConditionParameter($condition);
 
-							if (is_array($value)) {
+							if ($value === null) {
+								$conditionParameter = null;
 
-								$conditionWhere = $condition . ' NOT IN (:' . $conditionParameter . ')';
+								$conditionWhere = $condition . ' IS NOT NULL';
 							} else {
 
-								$conditionWhere = $condition . ' != :' . $conditionParameter;
+								if (is_array($value)) {
+									$conditionWhere = $condition . ' NOT IN (:' . $conditionParameter . ')';
+								} else {
+									$conditionWhere = $condition . ' != :' . $conditionParameter;
+								}
 							}
 							// Exemple de $condition "entity.field LIKE"
 						} elseif (preg_match('#.* LIKE#', $condition)) {
