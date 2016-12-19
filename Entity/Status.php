@@ -20,8 +20,7 @@ trait Status
 	 */
 	public function __construct()
 	{
-
-		$this->status = 0;
+		$this->status = self::$STATUS_DRAFT;
 	}
 
 	/**

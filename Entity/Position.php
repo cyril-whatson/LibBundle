@@ -13,6 +13,14 @@ trait Position
 {
 
 	/**
+	 * Status constructor.
+	 */
+	public function __construct()
+	{
+		$this->position = 0;
+	}
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="position", type="integer", nullable=true)
