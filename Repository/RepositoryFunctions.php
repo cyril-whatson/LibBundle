@@ -253,7 +253,15 @@ trait RepositoryFunctions
 			case 'first':
 
 				$this->qb->setMaxResults(1);
-				$results = $this->qb->getQuery()->getResult();
+
+				$query = $this->qb->getQuery();
+
+				$query->setHint(
+					\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+					'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
+				);
+
+				$results = $query->getResult();
 
 				if ($results) {
 					return $results[0];
@@ -265,7 +273,14 @@ trait RepositoryFunctions
 
 			case 'all':
 
-				return $this->qb->getQuery()->getResult();
+				$query = $this->qb->getQuery();
+
+				$query->setHint(
+					\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+					'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
+				);
+
+				return $query->getResult();
 
 				break;
 
