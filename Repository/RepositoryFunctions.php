@@ -304,7 +304,8 @@ trait RepositoryFunctions
 					$this->qb->setMaxResults($options['paginate']['limit']);
 				}
 
-				return new Paginator($this->qb, true);
+				$paginator = new Paginator($this->qb, true);
+				return $paginator->getIterator();
 
 				break;
 
