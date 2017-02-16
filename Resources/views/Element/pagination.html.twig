@@ -1,62 +1,130 @@
-{% if pagination['firstPage'] is defined or pagination['lastPage'] is defined %}
+{% set currentPage = pagination['page'] %}
+{% set nbEntities = pagination['count'] %}
+{% set limit = pagination['limit'] %}
+
+{% set nbPages = (nbEntities / limit) | round(0, 'ceil') %}
+
+{% set prevNextMaxPages = nbPages / 20 %}
+{% if prevNextMaxPages < 2 %}
+    {% set prevNextMaxPages = 2 %}
+{% endif %}
+{% if prevNextMaxPages > 5 %}
+    {% set prevNextMaxPages = 5 %}
+{% endif %}
+
+{% set previousPages = [] %}
+
+{% for i in prevNextMaxPages..1 %}
+    {% set prevPage = currentPage - i %}
+    {% if prevPage > 1 and prevPage != nbPages and prevPage <= nbPages %}
+        {% set previousPages = previousPages | merge([prevPage]) %}
+    {% endif %}
+{% endfor %}
+
+{% set prevPage = currentPage - prevNextMaxPages - 1 %}
+{% if prevPage > 1 and prevPage != nbPages and prevPage < nbPages %}
+    {% set morePreviousPages = 1 %}
+{% endif %}
+
+{% set nextPages = [] %}
+
+{% for i in 1..prevNextMaxPages %}
+    {% set nextPage = currentPage + i %}
+    {% if nextPage > 1 and nextPage != nbPages and nextPage < nbPages %}
+        {% set nextPages = nextPages | merge([nextPage]) %}
+    {% endif %}
+{% endfor %}
+
+{% set nextPage = currentPage + prevNextMaxPages + 1 %}
+{% if nextPage > 1 and nextPage != nbPages and nextPage < nbPages %}
+    {% set moreNextPages = 1 %}
+{% endif %}
+
+{% if currentPage != 1 %}
+    {% set firstPage = 1 %}
+    {% set prevPage = currentPage - 1 %}
+{% else %}
+    {% set firstPage = 0 %}
+    {% set prevPage = 0 %}
+{% endif %}
+
+{% if currentPage != nbPages %}
+    {% set lastPage = nbPages %}
+    {% set nextPage = currentPage + 1 %}
+{% else %}
+    {% set lastPage = 0 %}
+    {% set nextPage = 0 %}
+{% endif %}
+
+{% if firstPage is defined or lastPage is defined %}
     <nav>
         <ul class="pagination">
-            {% if pagination['prevPage'] is defined %}
+            {% if prevPage %}
                 <li>
                     {% set url = pagination['url'] %}
-                    {% if pagination['prevPage'] > 1 %}
-                        {% set url = url ~ '?page=' ~ pagination['prevPage'] %}
+                    {% if prevPage > 1 %}
+                        {% set url = url ~ '?page=' ~ prevPage %}
                     {% endif %}
                     <a class="prev" rel="prev" href="{{ url }}"
                        aria-label="Previous">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"><<</span>
                     </a>
                 </li>
             {% endif %}
-            {% if pagination['firstPage'] is defined %}
+            {% if firstPage %}
                 <li>
                     {% set url = pagination['url'] %}
-                    {% if pagination['firstPage'] > 1 %}
+                    {% if firstPage > 1 %}
                         {% set url = url ~ '?page=' ~ pagination['firstPage'] %}
                     {% endif %}
-                    <a href="{{ url }}">{{ pagination['firstPage'] }}</a>
+                    <a href="{{ url }}">
+                        <span>{{ firstPage }}</span>
+                    </a>
                 </li>
             {% endif %}
-            {% if pagination['morePreviousPages'] is defined %}
-                <li>...</li>
+            {% if morePreviousPages is defined %}
+                <li>
+                    <span>...</span>
+                </li>
             {% endif %}
-            {% if pagination['previousPages'] is defined %}
-                {% for previousPage in pagination['previousPages'] %}
+            {% if previousPages is defined %}
+                {% for previousPage in previousPages %}
                     <li>
                         {% set url = pagination['url'] %}
                         {% if previousPage > 1 %}
                             {% set url = url ~ '?page=' ~ previousPage %}
                         {% endif %}
-                        <a href="{{ url }}">{{ previousPage }}</a>
+                        <a href="{{ url }}">
+                            <span>{{ previousPage }}</span>
+                        </a>
                     </li>
                 {% endfor %}
             {% endif %}
-            <li>{{ pagination['currentPage'] }}</li>
-            {% if pagination['nextPages'] is defined %}
-                {% for nextPage in pagination['nextPages'] %}
+            <li>
+                <span>{{ currentPage }}</span>
+            </li>
+            {% if nextPages is defined %}
+                {% for nextPage in nextPages %}
                     <li>
                         <a href="{{ pagination['url'] ~ '?page=' ~ nextPage }}">{{ nextPage }}</a>
                     </li>
                 {% endfor %}
             {% endif %}
-            {% if pagination['moreNextPages'] is defined %}
-                <li>...</li>
-            {% endif %}
-            {% if pagination['lastPage'] is defined %}
+            {% if moreNextPages is defined %}
                 <li>
-                    <a href="{{ pagination['url'] ~ '?page=' ~ pagination['lastPage'] }}">{{ pagination['lastPage'] }}</a>
+                    <span>...</span>
                 </li>
             {% endif %}
-            {% if pagination['nextPage'] is defined %}
+            {% if lastPage %}
                 <li>
-                    <a class="next" rel="next" href="{{ pagination['url'] ~ '?page=' ~ pagination['nextPage'] }}"
+                    <a href="{{ pagination['url'] ~ '?page=' ~ lastPage }}">{{ lastPage }}</a>
+                </li>
+            {% endif %}
+            {% if nextPage %}
+                <li>
+                    <a class="next" rel="next" href="{{ pagination['url'] ~ '?page=' ~ nextPage }}"
                        aria-label="Next">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">>></span>
                     </a>
                 </li>
             {% endif %}
