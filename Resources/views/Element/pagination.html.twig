@@ -56,7 +56,7 @@
     {% set nextPage = 0 %}
 {% endif %}
 
-{% if firstPage is defined or lastPage is defined %}
+{% if nbPages > 1 %}
     <nav>
         <ul class="pagination">
             {% if prevPage %}
