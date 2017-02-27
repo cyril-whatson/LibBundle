@@ -12,72 +12,82 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait LogDate
 {
 
-	/**
-	 * @var \DateTime
-	 *
-	 * @Gedmo\Timestampable(on="create")
-	 * @ORM\Column(name="created", type="datetime")
-	 */
-	protected $created;
+    public function getCreatedText()
+    {
+        return $this->created->format('d/m/Y H:i:s');
+    }
 
-	/**
-	 * @var \DateTime
-	 *
-	 * @Gedmo\Timestampable(on="update")
-	 * @ORM\Column(name="updated", type="datetime")
-	 */
-	protected $updated;
+    public function getUpdatedText()
+    {
+        return $this->updated->format('d/m/Y H:i:s');
+    }
 
-	/**
-	 * Set created
-	 *
-	 * @param \DateTime $created
-	 *
-	 * @return $this
-	 */
-	public function setCreated($created)
-	{
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="created", type="datetime")
+     */
+    protected $created;
 
-		$this->created = $created;
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="updated", type="datetime")
+     */
+    protected $updated;
 
-		return $this;
-	}
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return $this
+     */
+    public function setCreated($created)
+    {
 
-	/**
-	 * Get created
-	 *
-	 * @return \DateTime
-	 */
-	public function getCreated()
-	{
+        $this->created = $created;
 
-		return $this->created;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set updated
-	 *
-	 * @param \DateTime $updated
-	 *
-	 * @return $this
-	 */
-	public function setUpdated($updated)
-	{
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
 
-		$this->updated = $updated;
+        return $this->created;
+    }
 
-		return $this;
-	}
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return $this
+     */
+    public function setUpdated($updated)
+    {
 
-	/**
-	 * Get updated
-	 *
-	 * @return \DateTime
-	 */
-	public function getUpdated()
-	{
+        $this->updated = $updated;
 
-		return $this->updated;
-	}
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+
+        return $this->updated;
+    }
 
 }
