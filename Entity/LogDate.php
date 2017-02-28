@@ -12,16 +12,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait LogDate
 {
 
-    public function getCreatedText()
-    {
-        return $this->created->format('d/m/Y H:i:s');
-    }
-
-    public function getUpdatedText()
-    {
-        return $this->updated->format('d/m/Y H:i:s');
-    }
-
     /**
      * @var \DateTime
      *
