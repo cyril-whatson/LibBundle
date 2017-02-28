@@ -3,6 +3,8 @@ services:
         class: WH\LibBundle\Services\EntityParser
     lib.useful_functions:
         class: WH\LibBundle\Services\UsefulFunctions
+    lib.form_validator:
+        class: WH\LibBundle\Services\FormValidator
     lib.csv_importer:
         class: WH\LibBundle\Services\CsvImporter
         arguments: ['@service_container']
