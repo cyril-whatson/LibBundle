@@ -150,13 +150,19 @@ trait RepositoryFunctions
                     break;
 
                 case 'order':
+                    $firstOrder = true;
                     foreach ($option as $order => $value) {
                         // Autre comportement défini ?
                         if ($this->handleOrder($order)) {
                             continue;
                         }
 
-                        $this->qb->addOrderBy($order, $value);
+                        if ($firstOrder) {
+                            $firstOrder = false;
+                            $this->qb->orderBy($order, $value);
+                        } else {
+                            $this->qb->addOrderBy($order, $value);
+                        }
                     }
                     break;
 
