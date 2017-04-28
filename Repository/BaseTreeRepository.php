@@ -9,9 +9,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  *
  * @package WH\LibBundle\Repository
  */
-class BaseTreeRepository extends NestedTreeRepository implements RepositoryInterface
+class BaseTreeRepository extends NestedTreeRepository
 {
-
 	use RepositoryFunctions;
-
 }

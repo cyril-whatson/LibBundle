@@ -9,9 +9,7 @@ use Doctrine\ORM\EntityRepository;
  *
  * @package WH\LibBundle\Repository
  */
-class BaseRepository extends EntityRepository implements RepositoryInterface
+class BaseRepository extends EntityRepository
 {
-
-	use RepositoryFunctions;
-
+    use RepositoryFunctions;
 }
