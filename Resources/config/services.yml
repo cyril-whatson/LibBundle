@@ -11,3 +11,5 @@ services:
         arguments: ["@service_container"]
         tags:
             - {name: twig.extension}
+    lib.form_error_collector:
+        class: WH\LibBundle\Services\FormErrorCollector
