@@ -48,21 +48,21 @@ class CsvImporter
      *
      * @return array
      */
-    public function getCsvData($csvFilePath, array $columns, $options = array(), $delimiter = ';')
+    public function getCsvData($csvFilePath, array $columns, $options = [], $delimiter = ';')
     {
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setDelimiter($delimiter);
 
         $data = $csv->fetchAll();
 
-        $errors = array();
+        $errors = [];
 
-        $columnedData = array();
-        $uniqueColumns = array();
+        $columnedData = [];
+        $uniqueColumns = [];
 
         // Détection CSV vide
         if (!isset($data[0])) {
-            $possibleDelimiters = array(',', ';');
+            $possibleDelimiters = [',', ';'];
 
             $errors[] = 'Empty CSV file';
         } else {
@@ -87,7 +87,7 @@ class CsvImporter
 
                 // Si la colonne est unique, on est pas obligé d'envoyer un tableau, une chaine suffit
                 if (!is_array($uniqueColumns)) {
-                    $uniqueColumns = array($uniqueColumns);
+                    $uniqueColumns = [$uniqueColumns];
                 }
 
                 foreach ($uniqueColumns as $uniqueColumn) {
@@ -99,8 +99,8 @@ class CsvImporter
         }
 
         if (empty($errors)) {
-            $perfectDuplicationsHashes = array();
-            $uniqueColumnsDuplicationsHashes = array();
+            $perfectDuplicationsHashes = [];
+            $uniqueColumnsDuplicationsHashes = [];
 
             // Parcours du CSV
             foreach ($data as $key => $values) {
@@ -138,7 +138,7 @@ class CsvImporter
                     }
                 }
 
-                $rowData = array();
+                $rowData = [];
                 foreach ($values as $value) {
                     $rowData[] = utf8_encode($value);
                 }
@@ -148,15 +148,15 @@ class CsvImporter
 
         // S'il y a des erreurs, on ne retourne que ça
         if (!empty($errors)) {
-            return array(
+            return [
                 'errors' => $errors,
-            );
+            ];
         }
 
         // Sinon on récupère les données
-        return array(
+        return [
             'data' => $columnedData,
-        );
+        ];
     }
 
 }

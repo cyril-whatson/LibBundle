@@ -20,7 +20,7 @@ class EntityParser
 
         $class = new \ReflectionClass($entityClassName);
 
-        $fields = array();
+        $fields = [];
 
         $properties = $class->getProperties();
         foreach ($properties as $property) {
@@ -35,9 +35,9 @@ class EntityParser
 
             $type = preg_replace('#.*type="([a-z]{1,})".*#', '$1', $docComment);
 
-            $fields[$property->getName()] = array(
+            $fields[$property->getName()] = [
                 'type' => $type,
-            );
+            ];
         }
 
         return $fields;

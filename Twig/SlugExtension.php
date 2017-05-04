@@ -30,15 +30,15 @@ class SlugExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
+        return [
             new \Twig_SimpleFilter(
                 'wh_slug',
-                array(
+                [
                     $this,
                     'slugFilter',
-                )
+                ]
             ),
-        );
+        ];
     }
 
     /**

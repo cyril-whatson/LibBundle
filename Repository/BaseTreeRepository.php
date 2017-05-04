@@ -11,5 +11,5 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  */
 class BaseTreeRepository extends NestedTreeRepository
 {
-	use RepositoryFunctions;
+    use RepositoryFunctions;
 }

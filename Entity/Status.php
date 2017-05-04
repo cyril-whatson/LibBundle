@@ -33,10 +33,10 @@ trait Status
     /**
      * @var array
      */
-    static protected $statuses = array(
+    static protected $statuses = [
         0 => 'Draft',
         1 => 'Published',
-    );
+    ];
 
     /**
      * @return array

@@ -12,100 +12,100 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait Tree
 {
 
-	/**
-	 * @Gedmo\TreeLeft
-	 * @ORM\Column(type="integer")
-	 */
-	protected $lft;
+    /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(type="integer")
+     */
+    protected $lft;
 
-	/**
-	 * @Gedmo\TreeLevel
-	 * @ORM\Column(type="integer")
-	 */
-	protected $lvl;
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(type="integer")
+     */
+    protected $lvl;
 
-	/**
-	 * @Gedmo\TreeRight
-	 * @ORM\Column(type="integer")
-	 */
-	protected $rgt;
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(type="integer")
+     */
+    protected $rgt;
 
-	/**
-	 * Set lft
-	 *
-	 * @param integer $lft
-	 *
-	 * @return $this
-	 */
-	public function setLft($lft)
-	{
+    /**
+     * Set lft
+     *
+     * @param integer $lft
+     *
+     * @return $this
+     */
+    public function setLft($lft)
+    {
 
-		$this->lft = $lft;
+        $this->lft = $lft;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get lft
-	 *
-	 * @return integer
-	 */
-	public function getLft()
-	{
+    /**
+     * Get lft
+     *
+     * @return integer
+     */
+    public function getLft()
+    {
 
-		return $this->lft;
-	}
+        return $this->lft;
+    }
 
-	/**
-	 * Set lvl
-	 *
-	 * @param integer $lvl
-	 *
-	 * @return $this
-	 */
-	public function setLvl($lvl)
-	{
+    /**
+     * Set lvl
+     *
+     * @param integer $lvl
+     *
+     * @return $this
+     */
+    public function setLvl($lvl)
+    {
 
-		$this->lvl = $lvl;
+        $this->lvl = $lvl;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get lvl
-	 *
-	 * @return integer
-	 */
-	public function getLvl()
-	{
+    /**
+     * Get lvl
+     *
+     * @return integer
+     */
+    public function getLvl()
+    {
 
-		return $this->lvl;
-	}
+        return $this->lvl;
+    }
 
-	/**
-	 * Set rgt
-	 *
-	 * @param integer $rgt
-	 *
-	 * @return $this
-	 */
-	public function setRgt($rgt)
-	{
+    /**
+     * Set rgt
+     *
+     * @param integer $rgt
+     *
+     * @return $this
+     */
+    public function setRgt($rgt)
+    {
 
-		$this->rgt = $rgt;
+        $this->rgt = $rgt;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get rgt
-	 *
-	 * @return integer
-	 */
-	public function getRgt()
-	{
+    /**
+     * Get rgt
+     *
+     * @return integer
+     */
+    public function getRgt()
+    {
 
-		return $this->rgt;
-	}
+        return $this->rgt;
+    }
 
 }
