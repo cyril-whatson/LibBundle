@@ -46,6 +46,7 @@ trait RepositoryFunctions
             ->createQueryBuilder($this->getEntityName());
 
         $qb = $this->processJoins($qb, $this->baseJoins);
+        $qb = $this->processOrders($qb, $this->baseOrders);
 
         return $qb;
     }
@@ -81,7 +82,7 @@ trait RepositoryFunctions
             }
 
             // Entité à laquelle lier
-            $joinEntity = $this->getEntityNameQueryBuilder();
+            $joinEntity = $this->entityName;
             if (isset($joinProperties['joinEntity'])) {
                 $joinEntity = $joinProperties['joinEntity'];
             }
