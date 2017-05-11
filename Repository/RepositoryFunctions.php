@@ -176,26 +176,15 @@ trait RepositoryFunctions
             throw new InvalidTypeException('Array expected, "' . gettype($groups) . '" received');
         }
 
-        foreach ($groups as $groupKey => $groupValue) {
-            if (in_array($groupKey, $this->queryGroups)) {
-                continue;
-            }
-
-            if (isset($this->groups[$groupKey])) {
-                // Si c'est une clé spécifique, on envoie le QueryBuilder à la fonction dédiée
-                $qb = $this->{$this->groups[$groupKey]}($qb, $groupValue);
+        foreach ($groups as $groupValue) {
+            // S'il le tableau $queryGroups est vide c'est qu'aucun group n'a encore été défini
+            if (empty($this->queryGroups)) {
+                $qb->groupBy($groupValue);
             } else {
-                // Sinon c'est un cas classique
-
-                // S'il le tableau $queryGroups est vide c'est qu'aucun group n'a encore été défini
-                if (empty($this->queryGroups)) {
-                    $qb->groupBy($groupKey, $groupValue);
-                } else {
-                    $qb->addGroupBy($groupKey, $groupValue);
-                }
+                $qb->addGroupBy($groupValue);
             }
 
-            $this->queryGroups[] = $groupKey;
+            $this->queryGroups[] = $groupValue;
         }
 
         return $qb;
