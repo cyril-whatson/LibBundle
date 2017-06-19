@@ -478,19 +478,20 @@ trait RepositoryFunctions
 
     /**
      * @param QueryBuilder $qb
+     * @param              $options
      *
      * @return array
      */
-    protected function getPaginateResult(QueryBuilder $qb)
+    protected function getPaginateResult(QueryBuilder $qb, $options)
     {
         $qb->getQuery();
 
-        if (!empty($options['paginate']['page'])) {
-            $qb->setFirstResult(($options['paginate']['page'] - 1) * $options['paginate']['limit']);
+        if (!empty($options['page'])) {
+            $qb->setFirstResult(($options['page'] - 1) * $options['limit']);
         }
 
-        if (!empty($options['paginate']['limit'])) {
-            $qb->setMaxResults($options['paginate']['limit']);
+        if (!empty($options['limit'])) {
+            $qb->setMaxResults($options['limit']);
         }
 
         $paginator = new Paginator($qb, true);
@@ -556,7 +557,9 @@ trait RepositoryFunctions
                 break;
 
             case 'paginate':
-                return $this->getPaginateResult($qb);
+                $options = (!empty($options['paginate'])) ? $options['paginate'] : [];
+
+                return $this->getPaginateResult($qb, $options);
                 break;
         }
 
