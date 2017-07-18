@@ -43,7 +43,7 @@ trait Status
      */
     static public function getStatuses()
     {
-        return array_flip(self::$statuses);
+        return self::$statuses;
     }
 
     /**
