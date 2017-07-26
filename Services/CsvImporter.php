@@ -4,6 +4,7 @@ namespace WH\LibBundle\Services;
 
 use League\Csv\Reader;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -41,15 +42,45 @@ class CsvImporter
     }
 
     /**
-     * @param        $csvFilePath
+     * @param        $filePath
      * @param array  $columns
      * @param array  $options
      * @param string $delimiter
      *
      * @return array
      */
-    public function getCsvData($csvFilePath, array $columns, $options = [], $delimiter = ';')
+    public function getCsvData($filePath, array $columns, $options = [], $delimiter = ';')
     {
+        $file = new File($filePath);
+
+        $mimeType = $file->getMimeType();
+
+        switch ($mimeType) {
+            case 'application/vnd.ms-excel':
+            case 'application/vnd.ms-office':
+                $phpExcelObject = $this->container->get('phpexcel')->createPHPExcelObject($filePath);
+                $csvFilePath = preg_replace('#\.(xls)(.*)#', '.csv', $filePath);
+
+                \PHPExcel_IOFactory::createWriter($phpExcelObject, 'CSV')
+                    ->setDelimiter(';')
+                    ->setEnclosure('')
+                    ->setSheetIndex(0)
+                    ->save($csvFilePath);
+                break;
+
+            case 'text/plain':
+                $csvFilePath = $filePath;
+                break;
+
+            default:
+                return [
+                    'errors' => [
+                        'Non supported file type',
+                    ],
+                ];
+                break;
+        }
+
         $csv = Reader::createFromPath($csvFilePath);
         $csv->setDelimiter($delimiter);
 
@@ -62,8 +93,6 @@ class CsvImporter
 
         // Détection CSV vide
         if (!isset($data[0])) {
-            $possibleDelimiters = [',', ';'];
-
             $errors[] = 'Empty CSV file';
         } else {
             $csvColumns = $data[0];
