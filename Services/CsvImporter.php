@@ -58,6 +58,7 @@ class CsvImporter
         switch ($mimeType) {
             case 'application/vnd.ms-excel':
             case 'application/vnd.ms-office':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                 $phpExcelObject = $this->container->get('phpexcel')->createPHPExcelObject($filePath);
                 $csvFilePath = preg_replace('#\.(xls)(.*)#', '.csv', $filePath);
 
