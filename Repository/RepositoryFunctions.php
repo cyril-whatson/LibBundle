@@ -429,16 +429,7 @@ trait RepositoryFunctions
     {
         $qb->setMaxResults(1);
 
-        $query = $qb->getQuery();
-
-        if (class_exists('Gedmo\Translatable\Query\TreeWalker\TranslationWalker')) {
-            $query->setHint(
-                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-                'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
-            );
-        }
-
-        $results = $query->getResult();
+        $results = $qb->getQuery()->getResult();
 
         if ($results) {
             return $results[0];
@@ -454,16 +445,7 @@ trait RepositoryFunctions
      */
     protected function getAllResult(QueryBuilder $qb)
     {
-        $query = $qb->getQuery();
-
-        if (class_exists('Gedmo\Translatable\Query\TreeWalker\TranslationWalker')) {
-            $query->setHint(
-                \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-                'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
-            );
-        }
-
-        return $query->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
