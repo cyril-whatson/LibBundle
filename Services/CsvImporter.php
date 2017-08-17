@@ -64,8 +64,6 @@ class CsvImporter
 
                 \PHPExcel_IOFactory::createWriter($phpExcelObject, 'CSV')
                     ->setDelimiter(';')
-                    ->setEnclosure('')
-                    ->setSheetIndex(0)
                     ->save($csvFilePath);
                 break;
 
@@ -170,7 +168,7 @@ class CsvImporter
 
                 $rowData = [];
                 foreach ($values as $value) {
-                    $rowData[] = utf8_encode($value);
+                    $rowData[] = $value;
                 }
                 if (sizeof($columns) == sizeof($rowData)) {
                     $columnedData[] = array_combine($columns, $rowData);
