@@ -172,7 +172,9 @@ class CsvImporter
                 foreach ($values as $value) {
                     $rowData[] = utf8_encode($value);
                 }
-                $columnedData[] = array_combine($columns, $rowData);
+                if (sizeof($columns) == sizeof($rowData)) {
+                    $columnedData[] = array_combine($columns, $rowData);
+                }
             }
         }
 
