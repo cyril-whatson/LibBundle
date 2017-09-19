@@ -2,6 +2,7 @@
 
 namespace WH\LibBundle\Repository;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -429,7 +430,9 @@ trait RepositoryFunctions
     {
         $qb->setMaxResults(1);
 
-        $results = $qb->getQuery()->getResult();
+        $query = $this->getQuery($qb);
+
+        $results = $query->getResult();
 
         if ($results) {
             return $results[0];
@@ -445,7 +448,9 @@ trait RepositoryFunctions
      */
     protected function getAllResult(QueryBuilder $qb)
     {
-        return $qb->getQuery()->getResult();
+        $query = $this->getQuery($qb);
+
+        return $query->getResult();
     }
 
     /**
@@ -455,7 +460,9 @@ trait RepositoryFunctions
      */
     protected function getOneResult(QueryBuilder $qb)
     {
-        return $qb->getQuery()->getOneOrNullResult();
+        $query = $this->getQuery($qb);
+
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -476,7 +483,9 @@ trait RepositoryFunctions
             $qb->setMaxResults($options['limit']);
         }
 
-        $paginator = new Paginator($qb, true);
+        $query = $this->getQuery($qb);
+
+        $paginator = new Paginator($query, true);
 
         return [
             'entities' => $paginator->getIterator(),
@@ -546,6 +555,23 @@ trait RepositoryFunctions
         }
 
         return false;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     *
+     * @return Query
+     */
+    private function getQuery(QueryBuilder $qb)
+    {
+        $query = $qb->getQuery();
+
+        $query->setHint(
+            Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+
+        return $query;
     }
 
 }
