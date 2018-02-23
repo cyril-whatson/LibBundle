@@ -49,7 +49,7 @@ class CsvImporter
      *
      * @return array
      */
-    public function getCsvData($filePath, array $columns, $options = [], $delimiter = ';')
+    public function getCsvData($filePath, array $columns, $options = [], $delimiter = ';',$header = true)
     {
         $file = new File($filePath);
 
@@ -95,20 +95,25 @@ class CsvImporter
             $errors[] = 'Empty CSV file';
         } else {
             $csvColumns = $data[0];
-            unset($data[0]);
+
+            // Supprime la 1er ligne d'entête
+            if($header) {
+                unset($data[0]);
+            }
 
             if (sizeof($columns) != sizeof($csvColumns)) {
                 $errors[] = 'Columns number is incorrect';
             }
 
             // Détection 1ère ligne d'entête incorrecte
-            $diffColumns = array_diff($columns, $csvColumns);
-            if (!empty($diffColumns)) {
-                foreach ($diffColumns as $diffColumn) {
-                    $errors[] = 'Column "' . $diffColumn . '" has not been detected';
+            if(isset($options['checkHeading'])) {
+                $diffColumns = array_diff($columns, $csvColumns);
+                if (!empty($diffColumns)) {
+                    foreach ($diffColumns as $diffColumn) {
+                        $errors[] = 'Column "' . $diffColumn . '" has not been detected';
+                    }
                 }
             }
-
             // Vérification que les colonnes uniques pour vérifier les doublons sont bien présentes dans les colonnes d'entête
             if (isset($options['uniqueColumns'])) {
                 $uniqueColumns = $options['uniqueColumns'];
